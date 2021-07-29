@@ -1,12 +1,14 @@
 package tp1;
 
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
+import java.text.DecimalFormat;
 
 public class MainTp1 {
 	public static void main(String[] args) {
 		//Variaveis
-		int escolha, qnt, contCliente = 0, contProduto = 0, busca, lucro, estoque;
+		int escolha, qnt, contCliente = 10, contProduto = 10, busca, lucro, estoque;
 		double valor;
 		char confirma;
 		String nome, telefone, endereco, buscaCliente, descricao, buscaProduto;
@@ -25,6 +27,8 @@ public class MainTp1 {
 		
 		Scanner ler = new Scanner(System.in);
 		
+		povoamentoClientes(nomeClientes, enderecoClientes, telefoneClientes); //Funcao para povoar os 10 dados de clientes
+		povoamentoProdutos(nomeProduto, descricaoProduto, valorProduto, lucroProduto, estoqueProduto); //Funcao para povoar os 10 dados de clientes
 		do { //Laço de repetição do menu
 			chamadoMenu();
 			escolha = ler.nextInt();
@@ -82,7 +86,7 @@ public class MainTp1 {
 							}
 						}
 					}
-					if(busca == 0) {
+					if(busca == 0) { //Valor de busca será 0 se durante o for acima nao trocar o valor para 1
 						System.out.println("Cliente não encontrado");
 					}
 				break;
@@ -106,12 +110,12 @@ public class MainTp1 {
 						lucroProduto.add(lucro);
 						System.out.println("Digite a quantidade desse produto em estoque");
 						estoque = ler.nextInt();
-						while(estoque < 0) {
+						while(estoque < 0) { //Validacao para nao inserir estoque negativo
 							System.out.println("Quantia invalida de estoque, tente novamente");
 							estoque = ler.nextInt();
 						}
 						estoqueProduto.add(estoque);
-						contProduto++;
+						contProduto++; //Variavel para contabilizar quantidadede de produtos inseridos
 					}
 					System.out.println("Cadastro Finalizado");
 				break;
@@ -152,7 +156,7 @@ public class MainTp1 {
 				break;
 				case 5:
 					System.out.println("Cadastro de vendas");
-					cadastroVendas(nomeClientes, nomeProduto, contCliente, estoqueProduto, contProduto);
+					cadastroVendas(nomeClientes, nomeProduto, contCliente, estoqueProduto, contProduto); //Metodo para cadastrar novas vendas
 				break;
 				case 6:
 					estoque(contProduto, nomeProduto, estoqueProduto); //Metodo para printar o estoque
@@ -187,10 +191,11 @@ public class MainTp1 {
 		}
 	}	
 	public static void printaProduto(ArrayList<String> nome, ArrayList<String> descricao, ArrayList<Double> valor, ArrayList<Integer> lucro, ArrayList<Integer> estoque, int i) {
+		DecimalFormat formatador = new DecimalFormat("0.00");
 		System.out.println("Produto encontrado");
 		System.out.println("Nome: " + nome.get(i));
 		System.out.println("Descrição: " + descricao.get(i));
-		System.out.println("Valor: " + valor.get(i));
+		System.out.println("Valor: " + formatador.format(valor.get(i)));
 		System.out.println("Porcentagem de lucro: " + lucro.get(i));
 		System.out.println("Quantia em estoque: " + estoque.get(i));
 		System.out.println("Deseja Alterar esses dados? \nS/N");
@@ -205,11 +210,11 @@ public class MainTp1 {
 			System.out.println(i+1 + " - " + nomeCliente.get(i));
 		}
 		escolhaCliente = ler.nextInt();
-		while(escolhaCliente > contClientes) {
+		while(escolhaCliente > contClientes) { //Validacao da opçao do cliente escolhido
 			System.out.println("Numero invalido, digite novamente");
 			escolhaCliente = ler.nextInt();
 		}
-		do {
+		do { //Laço de repetiçao da venda do produto, repetirá ate o usuario digitar N
 			System.out.println("Digite o numero do produto desejado");
 			for(int i = 0; i < contProduto; i++) {
 				System.out.println(i+1 + " - " + nomeProduto.get(i));
@@ -221,7 +226,7 @@ public class MainTp1 {
 			}
 			System.out.println("Quantas unidades do produto foram vendidas?");
 			qntVenda = ler.nextInt();
-			while(estoque.get(escolhaProduto - 1) - qntVenda < 0) {
+			while(estoque.get(escolhaProduto - 1) - qntVenda < 0) { //Validação para poder vender só enquanto o estoque estiver maior ou igual à 0
 				System.out.println("Venda incompativel, estoque ficara negativado, tente outro valor");
 				qntVenda = ler.nextInt();
 			}
@@ -230,5 +235,23 @@ public class MainTp1 {
 			confirma = ler.next().charAt(0);
 		}while(confirma == 'S' || confirma == 's');
 		
+	}
+	public static void povoamentoClientes(ArrayList<String> nomeCliente, ArrayList<String> enderecoCliente, ArrayList<String> telefoneCliente) {
+		Random gerador = new Random(); //Gerador de numeros aleatorios
+		for(int i = 0; i<10 ; i++) {
+			nomeCliente.add("Joao" + (i+1));
+			enderecoCliente.add("Quadra " + gerador.nextInt(50));
+			telefoneCliente.add("" + gerador.nextInt(1000));
+		}		
+	}
+	public static void povoamentoProdutos(ArrayList<String> nomeProdutos, ArrayList<String> descricaoProdutos, ArrayList<Double> valorProdutos, ArrayList<Integer> lucroProdutos, ArrayList<Integer> estoqueProdutos) {
+		Random gerador = new Random(); //Gerador de numeros aleatorios
+		for(int i = 0; i<10 ; i++) {
+			nomeProdutos.add("Pipoca" + i);
+			descricaoProdutos.add("Texto" + i);
+			valorProdutos.add(gerador.nextDouble() * 100);
+			lucroProdutos.add(gerador.nextInt(100));
+			estoqueProdutos.add(gerador.nextInt(100));
+		}
 	}
 }
